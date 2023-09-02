@@ -2,72 +2,23 @@
  * @format
  */
 
-import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  View,
-  Text,
-  useColorScheme,
-} from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
-import Home from './src/screens/Home'
-import NetworkFacade from './src/network/NetworkFacade';
+import SurahScreen from './src/screens/SurahScreen';
+import SurahListScreen from './src/screens/SurahListScreen';
+
+const Stack = createNativeStackNavigator()
 
 function App(): JSX.Element {
-  const [surahList, setSurahList] = useState([])
-  const [surah, setSurah] = useState({})
-
-  useEffect(() => {
-    NetworkFacade
-    .get('https://equran.id/api/v2/surat')
-    .then(response => {
-      setSurahList(response.data)
-    })
-    // NetworkFacade
-    // .get('https://equran.id/api/v2/surat/1')
-    // .then(response => {
-    //   setSurah(response.data)
-    // })
-  }, [])
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <FlatList
-          data={surahList.data}
-          renderItem={item => renderItem(item)}
-          keyExtractor={(item) => item.nomor}
-        />
-        {/* <FlatList
-          data={surah.data?.ayat}
-          renderItem={item => renderItem(item)}
-          keyExtractor={(item) => item.nomor}
-        /> */}
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const renderItem = ({item}): JSX.Element => {
-  return (
-    <Home surah={item}/>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='SurahList'>
+        <Stack.Screen name="SurahList" component={SurahListScreen} options={{ title: 'Baca Qur\'an' }} />
+        <Stack.Screen name="Surah" component={SurahScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 

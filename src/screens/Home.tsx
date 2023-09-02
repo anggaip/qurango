@@ -5,6 +5,7 @@ import {
   useColorScheme,
   StyleSheet,
   View,
+  Pressable,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -18,10 +19,11 @@ interface Home {
 }
 
 type HomeProps = PropsWithChildren<{
-  surah: Home
+  surah: Home,
+  navigation: any
 }>
 
-function Section({children, title}: SectionProps): JSX.Element {
+function Section({title}: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -31,26 +33,30 @@ function Section({children, title}: SectionProps): JSX.Element {
           {
             color: isDarkMode ? Colors.white : Colors.black,
           },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
     </View>
   );
 }
 
-function Home({surah}: HomeProps): JSX.Element {
+function Home({surah, navigation}: HomeProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View
       style={{
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-      }}>
-      <Section title={surah.nama}>
-        {surah.deskripsi}
-      </Section>
-      {/* <Section title={surah.teksArab}>
-        {surah.deskripsi}
-      </Section> */}
+      }}
+    >
+      <Pressable onPress={() => navigation.navigate('Surah')}>
+        <Section title={surah.nama}>
+          {surah.deskripsi}
+        </Section>
+        {/* <Section title={surah.teksArab}>
+          {surah.deskripsi}
+        </Section> */}
+      </Pressable>
     </View>
   )
 }
