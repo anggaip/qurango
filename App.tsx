@@ -1,11 +1,8 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
  * @format
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -16,13 +13,10 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import axios from 'axios';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 
 type SectionProps = PropsWithChildren<{
@@ -56,6 +50,19 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 function App(): JSX.Element {
+  const [surah, setSurah] = useState({})
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: 'https://equran.id/api/v2/surat',
+      responseType: 'json'
+    })
+    .then(function (response) {
+      console.log('data: ', response)
+      setSurah(response.data.data[0])
+    })
+  }, [])
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -71,25 +78,13 @@ function App(): JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title={surah.nama}>
+            {surah.deskripsi}
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
