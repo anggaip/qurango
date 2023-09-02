@@ -12,7 +12,7 @@ import Home from './Home';
 import NetworkFacade from '../network/NetworkFacade';
 
 type SurahListProps = {
-  navigation: object
+  navigation: any
 }
 
 function SurahListScreen({ navigation }: SurahListProps): JSX.Element {
@@ -25,12 +25,8 @@ function SurahListScreen({ navigation }: SurahListProps): JSX.Element {
     .then(response => {
       setSurahList(response.data)
     })
-    // NetworkFacade
-    // .get('https://equran.id/api/v2/surat/1')
-    // .then(response => {
-    //   setSurah(response.data)
-    // })
   }, [])
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -49,19 +45,27 @@ function SurahListScreen({ navigation }: SurahListProps): JSX.Element {
           keyExtractor={(item) => item.nomor}
           style={backgroundStyle}
         />
-        {/* <FlatList
-          data={surah.data?.ayat}
-          renderItem={item => renderItem(item)}
-          keyExtractor={(item) => item.nomor}
-        /> */}
     </SafeAreaView>
   );
 }
 
 const renderItem = ({item}: {item: object}, navigation: SurahListProps): JSX.Element => {
   return (
-    <Home surah={item} navigation={navigation}/>
+    <Home
+      surah={item}
+      onPress={() => handleOnpressList(item, navigation)}
+    />
   )
+}
+
+const handleOnpressList = (item: any, navigation: SurahListProps) => {
+  NetworkFacade
+    .get(`https://equran.id/api/v2/surat/${item.nomor}`)
+    .then(function (response) {
+      if (response.data.code === 200) {
+        navigation.navigate('Surah', { surah: response.data.data, title: item.namaLatin })
+      }
+    })
 }
 
 export default SurahListScreen;

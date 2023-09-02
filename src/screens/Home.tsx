@@ -10,20 +10,22 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 type SectionProps = PropsWithChildren<{
-  title?: string;
+  title?: string,
+  nomor: number
 }>;
 
 interface Home {
   nama?: string,
-  deskripsi?: string
+  teksArab?: string,
+  nomorAyat?: number
 }
 
 type HomeProps = PropsWithChildren<{
   surah: Home,
-  navigation: any
+  onPress?: any
 }>
 
-function Section({title}: SectionProps): JSX.Element {
+function Section({title, nomor}: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -35,27 +37,31 @@ function Section({title}: SectionProps): JSX.Element {
           },
         ]}
       >
-        {title}
+        {title} <Text style={styles.nomorAyat}>({nomor})</Text>
       </Text>
     </View>
   );
 }
 
-function Home({surah, navigation}: HomeProps): JSX.Element {
+function Home({surah, onPress}: HomeProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  let text
+  let nomor
+  if (surah.teksArab) {
+    text = surah.teksArab
+    nomor = surah.nomorAyat
+  } else {
+    text = surah.nama
+    nomor = surah.nomor
+  }
   return (
     <View
       style={{
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
       }}
     >
-      <Pressable onPress={() => navigation.navigate('Surah')}>
-        <Section title={surah.nama}>
-          {surah.deskripsi}
-        </Section>
-        {/* <Section title={surah.teksArab}>
-          {surah.deskripsi}
-        </Section> */}
+      <Pressable onPress={onPress}>
+        <Section title={text} nomor={nomor}/>
       </Pressable>
     </View>
   )
@@ -73,10 +79,11 @@ const styles = StyleSheet.create({
     fontFamily: 'LPMQ'
     // fontFamily: 'pdms-saleem-quranfont'
   },
-  sectionDescription: {
+  nomorAyat: {
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
+    fontFamily: 'LPMQ'
   },
   highlight: {
     fontWeight: '700',
