@@ -14,9 +14,9 @@ const Stack = createNativeStackNavigator()
 function App(): JSX.Element {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SurahList'>
-        <Stack.Screen name="SurahList" component={SurahListScreen} options={{ title: 'Baca Qur\'an' }} />
-        <Stack.Screen name="Surah" component={SurahScreen} />
+      <Stack.Navigator initialRouteName='SurahList' screenOptions={{ contentStyle: { backgroundColor: 'white' }, orientation: 'all' }}>
+        <Stack.Screen name="SurahList" component={SurahListScreen} options={{ title: 'Baca Qur\'an', headerTitleAlign: 'center' }} />
+        <Stack.Screen name="Surah" component={SurahScreen} options={{ headerTitleAlign: 'center' }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
