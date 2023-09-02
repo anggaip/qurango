@@ -1,4 +1,17 @@
 {
   "migIndex": 1,
-  "data": []
+  "data": [
+    {
+      "path": "src/assets/fonts/LPMQ.ttf",
+      "sha1": "72babf824694a116c8fe97b580dd82b5bf4e4f40"
+    },
+    {
+      "path": "src/assets/fonts/Zokrofi.ttf",
+      "sha1": "e636b0ccc3f9d320a560ceca7a64614f7a8e8c71"
+    },
+    {
+      "path": "src/assets/fonts/pdms-saleem-quranfont.ttf",
+      "sha1": "6317a8db41ac979d58b6f0577fba52223c608ef4"
+    }
+  ]
 }
