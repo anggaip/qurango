@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.qurango"
+    namespace "com.angga.qurango"
     defaultConfig {
-        applicationId "com.qurango"
+        applicationId "com.angga.qurango"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

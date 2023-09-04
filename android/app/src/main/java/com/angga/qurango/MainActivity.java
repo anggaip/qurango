@@ -1,4 +1,4 @@
-package com.qurango;
+package com.angga.qurango;
 
 import android.os.Bundle;
 
