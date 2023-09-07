@@ -1,28 +1,28 @@
-import React, { PropsWithChildren, useEffect } from 'react';
-import { FlatList, SafeAreaView, StatusBar, useColorScheme } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import React, {PropsWithChildren, useEffect} from 'react';
+import {FlatList, SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Home from './Home';
 
 interface Surah {
-  params: any
+  params: any;
 }
 
 type SurahProps = PropsWithChildren<{
-  navigation: any,
-  route: Surah
-}>
+  navigation: any;
+  route: Surah;
+}>;
 
 function SurahScreen({navigation, route}: SurahProps): JSX.Element {
   useEffect(() => {
-    navigation.setOptions({ title: route.params.title })
-  }, [])
+    navigation.setOptions({title: route.params.title});
+  }, []);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const { surah } = route.params
+  const {surah} = route.params;
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -30,21 +30,17 @@ function SurahScreen({navigation, route}: SurahProps): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-        <FlatList
-          data={surah.ayat}
-          renderItem={item => renderItem(item)}
-          keyExtractor={(item) => item.nomor}
-        />
+      <FlatList
+        data={surah.ayat}
+        renderItem={item => renderItem(item)}
+        keyExtractor={item => item.nomor}
+      />
     </SafeAreaView>
-  )
+  );
 }
 
 const renderItem = ({item}: {item: object}): JSX.Element => {
-  return (
-    <Home
-      surah={item}
-    />
-  )
-}
+  return <Home surah={item} />;
+};
 
 export default SurahScreen;
