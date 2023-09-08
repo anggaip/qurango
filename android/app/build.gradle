@@ -78,8 +78,8 @@ android {
         applicationId "com.angga.qurango"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 121001
-        versionName "1.21.0.0.1"
+        versionCode 121002
+        versionName "1.21.0.0.2"
     }
     signingConfigs {
         debug {

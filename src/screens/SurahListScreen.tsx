@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Home from './Home';
 import NetworkFacade from '../network/NetworkFacade';
@@ -56,7 +62,7 @@ const renderContent = (surahList, {navigation}) => {
       // style={backgroundStyle}
     />
   );
-}
+};
 
 const renderItem = (
   {item}: {item: object},

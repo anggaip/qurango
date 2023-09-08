@@ -33,7 +33,7 @@ function SurahScreen({navigation, route}: SurahProps): JSX.Element {
       <FlatList
         data={surah.ayat}
         renderItem={item => renderItem(item)}
-        keyExtractor={item => item.nomor}
+        keyExtractor={item => item.nomorAyat}
       />
     </SafeAreaView>
   );
