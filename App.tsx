@@ -3,27 +3,33 @@
  */
 
 import React from 'react';
+import {useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {PaperProvider} from 'react-native-paper';
 
 import SurahScreen from './src/screens/SurahScreen';
 import SurahListScreen from './src/screens/SurahListScreen';
 
 const Stack = createNativeStackNavigator();
 
-function App(): JSX.Element {
+function Main(): JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = isDarkMode ? '#283c63' : 'white';
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="SurahList"
         screenOptions={{
-          contentStyle: {backgroundColor: 'white'},
+          contentStyle: {backgroundColor: backgroundStyle},
           orientation: 'all',
-          // headerStyle: {
-          //   backgroundColor: '#080f58',
-          // },
-          // headerTintColor: '#ffffff',
-          // statusBarColor: '#080f58',
+          headerStyle: {
+            backgroundColor: '#080f58',
+          },
+          headerTintColor: '#DAE1E7',
+          statusBarColor: '#080f58',
           // statusBarStyle: 'light',
         }}>
         <Stack.Screen
@@ -38,6 +44,14 @@ function App(): JSX.Element {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+function App(): JSX.Element {
+  return (
+    <PaperProvider>
+      <Main />
+    </PaperProvider>
   );
 }
 

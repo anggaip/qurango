@@ -19,7 +19,7 @@ function SurahScreen({navigation, route}: SurahProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#080f58' : Colors.lighter,
   };
 
   const {surah} = route.params;

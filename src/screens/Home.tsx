@@ -2,6 +2,7 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {Text, useColorScheme, StyleSheet, View, Pressable} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {TouchableRipple} from 'react-native-paper';
 
 type SectionProps = PropsWithChildren<{
   title?: string;
@@ -28,7 +29,7 @@ function Section({title, nomor}: SectionProps): JSX.Element {
         style={[
           styles.sectionTitle,
           {
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: isDarkMode ? '#eeeeee' : Colors.black,
           },
         ]}>
         {title} <Text style={styles.nomorAyat}>({nomor})</Text>
@@ -52,26 +53,32 @@ function Home({surah, onPress}: HomeProps): JSX.Element {
     <View
       key={nomor}
       style={{
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: isDarkMode ? '#283c63' : Colors.white,
+        paddingHorizontal: 15,
       }}>
-      <Pressable onPress={onPress}>
+      <TouchableRipple onPress={onPress}>
         <Section title={text} nomor={nomor} />
-      </Pressable>
+      </TouchableRipple>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    flex: 1,
+    marginTop: 15,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#928a97',
+    paddingBottom: 10,
   },
   sectionTitle: {
+    flex: 1,
     fontSize: 24,
     fontWeight: '600',
     // fontFamily: 'Zokrofi'
     fontFamily: 'LPMQ',
-    // fontFamily: 'pdms-saleem-quranfont'
+    // fontFamily: 'pdms-saleem-quranfont',
   },
   nomorAyat: {
     marginTop: 8,

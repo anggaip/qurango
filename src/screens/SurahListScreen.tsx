@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {FlatList, SafeAreaView, StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Home from './Home';
 import NetworkFacade from '../network/NetworkFacade';
+import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 
 type SurahListProps = {
   navigation: any;
@@ -20,7 +21,8 @@ function SurahListScreen({navigation}: SurahListProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#283c63' : Colors.lighter,
+    flex: 1,
   };
 
   return (
@@ -29,13 +31,30 @@ function SurahListScreen({navigation}: SurahListProps): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <FlatList
-        data={surahList.data}
-        renderItem={item => renderItem(item, navigation)}
-        keyExtractor={item => item.nomor}
-        style={backgroundStyle}
-      />
+      {renderContent(surahList, {navigation})}
     </SafeAreaView>
+  );
+}
+
+const renderContent = (surahList, {navigation}) => {
+  if (surahList.length === 0) {
+    return (
+      <ActivityIndicator
+        style={styles.activityIndicator}
+        size={'large'}
+        animating={true}
+        color={MD2Colors.red800}
+      />
+    );
+  }
+
+  return (
+    <FlatList
+      data={surahList.data}
+      renderItem={item => renderItem(item, navigation)}
+      keyExtractor={item => item.nomor}
+      // style={backgroundStyle}
+    />
   );
 }
 
@@ -60,5 +79,11 @@ const handleOnpressList = (item: any, navigation: SurahListProps) => {
     },
   );
 };
+
+const styles = StyleSheet.create({
+  activityIndicator: {
+    flex: 1,
+  },
+});
 
 export default SurahListScreen;
