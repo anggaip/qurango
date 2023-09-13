@@ -19,17 +19,14 @@ function SurahScreen({navigation, route}: SurahProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#080f58' : Colors.lighter,
+    backgroundColor: isDarkMode ? '#283c63' : Colors.lighter,
   };
 
   const {surah} = route.params;
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+      <StatusBar barStyle="light-content" backgroundColor="#080f58" />
       <FlatList
         data={surah.ayat}
         renderItem={item => renderItem(item)}

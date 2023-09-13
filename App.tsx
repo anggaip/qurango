@@ -10,6 +10,7 @@ import {PaperProvider} from 'react-native-paper';
 
 import SurahScreen from './src/screens/SurahScreen';
 import SurahListScreen from './src/screens/SurahListScreen';
+import CustomNavigationBar from './src/components/CustomNavigationBar';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,31 +20,27 @@ function Main(): JSX.Element {
   const backgroundStyle = isDarkMode ? '#283c63' : 'white';
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="SurahList"
-        screenOptions={{
-          contentStyle: {backgroundColor: backgroundStyle},
-          orientation: 'all',
-          headerStyle: {
-            backgroundColor: '#080f58',
-          },
-          headerTintColor: '#DAE1E7',
-          statusBarColor: '#080f58',
-          // statusBarStyle: 'light',
-        }}>
-        <Stack.Screen
-          name="SurahList"
-          component={SurahListScreen}
-          options={{title: "Baca Qur'an", headerTitleAlign: 'center'}}
-        />
-        <Stack.Screen
-          name="Surah"
-          component={SurahScreen}
-          options={{headerTitleAlign: 'center'}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="SurahList"
+          screenOptions={{
+            header: props => <CustomNavigationBar {...props} />,
+            contentStyle: {backgroundColor: backgroundStyle},
+          }}>
+          <Stack.Screen
+            name="SurahList"
+            component={SurahListScreen}
+            options={{title: "Baca Qur'an", headerTitleAlign: 'center'}}
+          />
+          <Stack.Screen
+            name="Surah"
+            component={SurahScreen}
+            options={{headerTitleAlign: 'center'}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 

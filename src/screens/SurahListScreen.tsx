@@ -33,10 +33,7 @@ function SurahListScreen({navigation}: SurahListProps): JSX.Element {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+      <StatusBar barStyle="light-content" backgroundColor="#080f58" />
       {renderContent(surahList, {navigation})}
     </SafeAreaView>
   );

@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     flex: 3,
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '600',
     // fontFamily: 'Zokrofi'
     fontFamily: 'LPMQ',
@@ -152,8 +152,8 @@ const styles = StyleSheet.create({
   },
   nomorAyat: {
     flex: 1,
-    marginTop: 8,
-    fontSize: 18,
+    // marginTop: 8,
+    fontSize: 16,
     fontWeight: '400',
     fontFamily: 'LPMQ',
     // justifyContent: 'center',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   textLatin: {
     flex: 1,
     // marginTop: 8,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     fontFamily: 'LPMQ',
   },
