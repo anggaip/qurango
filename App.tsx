@@ -2,49 +2,53 @@
  * @format
  */
 
-import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import {useColorScheme} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {PaperProvider} from 'react-native-paper';
 
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
-import Home from './src/screens/Home'
-import NetworkFacade from './src/network/NetworkFacade';
+import SurahScreen from './src/screens/SurahScreen';
+import SurahListScreen from './src/screens/SurahListScreen';
+import CustomNavigationBar from './src/components/CustomNavigationBar';
 
-function App(): JSX.Element {
-  const [surah, setSurah] = useState({})
+const Stack = createNativeStackNavigator();
 
-  useEffect(() => {
-    NetworkFacade
-    .get('https://equran.id/api/v2/surat')
-    .then(response => {
-      setSurah(response.data.data[0])
-    })
-  }, [])
+function Main(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const backgroundStyle = isDarkMode ? '#283c63' : 'white';
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Home surah={surah} />
-      </ScrollView>
-    </SafeAreaView>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="SurahList"
+          screenOptions={{
+            header: props => <CustomNavigationBar {...props} />,
+            contentStyle: {backgroundColor: backgroundStyle},
+          }}>
+          <Stack.Screen
+            name="SurahList"
+            component={SurahListScreen}
+            options={{title: "Baca Qur'an", headerTitleAlign: 'center'}}
+          />
+          <Stack.Screen
+            name="Surah"
+            component={SurahScreen}
+            options={{headerTitleAlign: 'center'}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  );
+}
+
+function App(): JSX.Element {
+  return (
+    <PaperProvider>
+      <Main />
+    </PaperProvider>
   );
 }
 
