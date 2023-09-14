@@ -5,11 +5,12 @@ import {
   StatusBar,
   StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native';
+import {ActivityIndicator, MD3Colors, Searchbar} from 'react-native-paper';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Home from './Home';
 import NetworkFacade from '../network/NetworkFacade';
-import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 
 type SurahListProps = {
   navigation: any;
@@ -17,11 +18,15 @@ type SurahListProps = {
 
 function SurahListScreen({navigation}: SurahListProps): JSX.Element {
   const [surahList, setSurahList] = useState([]);
+  const [filterSurahList, setFilterSurahList] = useState([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   useEffect(() => {
-    NetworkFacade.get('https://equran.id/api/v2/surat').then(response => {
-      setSurahList(response.data);
-    });
+    if (surahList.length === 0) {
+      NetworkFacade.get('https://equran.id/api/v2/surat').then(response => {
+        setSurahList(response.data);
+      });
+    }
   }, []);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -29,35 +34,88 @@ function SurahListScreen({navigation}: SurahListProps): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? '#283c63' : Colors.lighter,
     flex: 1,
+    paddingBottom: 70,
   };
+
+  const onChangeSearch = value => {
+    setSearchQuery(value);
+    const newData = surahList.data.filter(item => {
+      const itemData = item.namaLatin.toLowerCase();
+      const newItemData = itemData.replace(/-/g, ' ');
+      return newItemData.indexOf(value.toLowerCase()) > -1;
+    });
+    setFilterSurahList(newData);
+  };
+
+  // const handleSearchBar = () => {
+  //   const newData = surahList.data.filter(item => {
+  //     const itemData = item.namaLatin.toLowerCase();
+  //     const newItemData = itemData.replace(/-/g, ' ');
+  //     return newItemData.indexOf(searchQuery) > -1;
+  //   });
+  //   setFilterSurahList(newData);
+  // }
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle="light-content" backgroundColor="#080f58" />
-      {renderContent(surahList, {navigation})}
+      <View style={{backgroundColor: '#080f58', paddingHorizontal: 10}}>
+        <Searchbar
+          placeholder="Cari surat"
+          onChangeText={onChangeSearch}
+          value={searchQuery}
+          // autoFocus
+          // icon={'arrow-left'}
+          // onIconPress={handleSearchBar}
+          clearIcon={'close-circle-outline'}
+          // inputStyle={{
+          //   backgroundColor: '#DAE1E7',
+          // }}
+          style={{
+            backgroundColor: isDarkMode ? '#283c63' : Colors.lighter,
+            // color: '#DAE1E7',
+            // borderStyle: 'solid',
+            // borderColor: '#283c63',
+            // borderWidth: 2,
+            // width: '90%',
+            // maxHeight: 50,
+            marginBottom: 15,
+          }}
+          // traileringIcon={'camera'}
+        />
+      </View>
+      {renderContent(surahList, filterSurahList, {navigation})}
     </SafeAreaView>
   );
 }
 
-const renderContent = (surahList, {navigation}) => {
+const renderContent = (surahList, filterSurahList, {navigation}) => {
   if (surahList.length === 0) {
     return (
       <ActivityIndicator
         style={styles.activityIndicator}
         size={'large'}
         animating={true}
-        color={MD2Colors.red800}
+        color={MD3Colors.red800}
       />
     );
   }
 
+  let newSurahList = surahList.data;
+
+  if (filterSurahList.length !== 0) {
+    newSurahList = filterSurahList
+  }
+
   return (
-    <FlatList
-      data={surahList.data}
-      renderItem={item => renderItem(item, navigation)}
-      keyExtractor={item => item.nomor}
-      // style={backgroundStyle}
-    />
+    <View>
+      <FlatList
+        data={newSurahList}
+        renderItem={item => renderItem(item, navigation)}
+        keyExtractor={item => item.nomor}
+        // style={backgroundStyle}
+      />
+    </View>
   );
 };
 
