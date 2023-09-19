@@ -2,8 +2,8 @@
  * @format
  */
 
-import React from 'react';
-import {useColorScheme} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PaperProvider} from 'react-native-paper';
@@ -11,10 +11,27 @@ import {PaperProvider} from 'react-native-paper';
 import SurahScreen from './src/screens/SurahScreen';
 import SurahListScreen from './src/screens/SurahListScreen';
 import CustomNavigationBar from './src/components/CustomNavigationBar';
+import NotificationHelper from './src/helpers/NotificationHelper';
+import messaging from '@react-native-firebase/messaging';
 
 const Stack = createNativeStackNavigator();
 
 function Main(): JSX.Element {
+  const notification = new NotificationHelper();
+  notification.getDeviceToken().then(function (response) {
+    console.log(response);
+  });
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log(JSON.stringify(remoteMessage));
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  })
+
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = isDarkMode ? '#283c63' : 'white';

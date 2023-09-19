@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
+  Text,
   useColorScheme,
   View,
 } from 'react-native';
@@ -84,12 +85,12 @@ function SurahListScreen({navigation}: SurahListProps): JSX.Element {
           // traileringIcon={'camera'}
         />
       </View>
-      {renderContent(surahList, filterSurahList, {navigation})}
+      {renderContent(surahList, filterSurahList, searchQuery, {navigation})}
     </SafeAreaView>
   );
 }
 
-const renderContent = (surahList, filterSurahList, {navigation}) => {
+const renderContent = (surahList, filterSurahList, searchQuery, {navigation}) => {
   if (surahList.length === 0) {
     return (
       <ActivityIndicator
@@ -104,7 +105,21 @@ const renderContent = (surahList, filterSurahList, {navigation}) => {
   let newSurahList = surahList.data;
 
   if (filterSurahList.length !== 0) {
-    newSurahList = filterSurahList
+    newSurahList = filterSurahList;
+  }
+
+  if (filterSurahList.length === 0 && searchQuery) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingTop: 20,
+        }}>
+        <Text style={styles.notFoundText}>Nama surat tidak ditemukan</Text>
+      </View>
+    );
   }
 
   return (
@@ -144,6 +159,10 @@ const handleOnpressList = (item: any, navigation: SurahListProps) => {
 const styles = StyleSheet.create({
   activityIndicator: {
     flex: 1,
+  },
+  notFoundText: {
+    fontFamily: 'LPMQ',
+    fontSize: 16,
   },
 });
 

@@ -28,12 +28,20 @@ function Section({
   nomor,
   textLatin,
   tempatTurun,
-  jumlahAyat
+  jumlahAyat,
 }: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const arabicNumber = nomor.toLocaleString('ar-EG');
   return (
     <View style={styles.sectionContainer}>
-      {renderLeftSection(title, nomor, textLatin, tempatTurun, jumlahAyat, isDarkMode)}
+      {renderLeftSection(
+        title,
+        nomor,
+        textLatin,
+        tempatTurun,
+        jumlahAyat,
+        isDarkMode,
+      )}
       <Text
         style={[
           styles.sectionTitle,
@@ -41,8 +49,18 @@ function Section({
             color: isDarkMode ? '#eeeeee' : Colors.black,
           },
         ]}>
-        {title}{' '}
-        {!textLatin ? <Text style={styles.nomorAyat}>({nomor})</Text> : null}
+        {title}
+        {!textLatin ? (
+          <Text
+            style={[
+              styles.nomorAyat,
+              {
+                fontSize: 28,
+              },
+            ]}>
+            {arabicNumber}
+          </Text>
+        ) : null}
       </Text>
     </View>
   );
@@ -67,11 +85,12 @@ const renderLeftSection = (
           styles.nomorAyat,
           {
             color: isDarkMode ? '#eeeeee' : Colors.black,
+            fontSize: 16,
           },
         ]}>
         ({nomor})
       </Text>
-      <View style={{flex: 3, flexDirection: 'column',}}>
+      <View style={{flex: 3, flexDirection: 'column'}}>
         <Text
           style={[
             styles.textLatin,
@@ -141,10 +160,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     flex: 3,
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '600',
     // fontFamily: 'Zokrofi'
     fontFamily: 'LPMQ',
+    lineHeight: 60,
     // fontFamily: 'pdms-saleem-quranfont',
     // justifyContent: 'space-between',
     // alignSelf: 'flex-start',
@@ -153,7 +173,7 @@ const styles = StyleSheet.create({
   nomorAyat: {
     flex: 1,
     // marginTop: 8,
-    fontSize: 16,
+    // fontSize: 16,
     fontWeight: '400',
     fontFamily: 'LPMQ',
     // justifyContent: 'center',

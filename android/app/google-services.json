@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "81673024593",
+    "project_id": "quran-go",
+    "storage_bucket": "quran-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81673024593:android:52e110c515541c15197470",
+        "android_client_info": {
+          "package_name": "com.angga.qurango"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvvcLDsIPtsvY3UoRtkVv_4tl0oIza6Lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
