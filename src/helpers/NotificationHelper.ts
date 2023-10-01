@@ -6,7 +6,7 @@ class NotificationHelper {
     this.requestPermissionAndroid();
   }
 
-  requestPermissionAndroid = async () => {
+  requestPermissionAndroid = async (): Promise<void> => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
@@ -22,7 +22,7 @@ class NotificationHelper {
     }
   };
 
-  getDeviceToken = async () => {
+  getDeviceToken = async (): Promise<string> => {
     await messaging().registerDeviceForRemoteMessages();
     return await messaging().getToken();
   };
