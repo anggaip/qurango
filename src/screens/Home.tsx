@@ -1,47 +1,40 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import {Text, useColorScheme, StyleSheet, View, Pressable} from 'react-native';
+import {Text, useColorScheme, StyleSheet, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {TouchableRipple} from 'react-native-paper';
 
 type SectionProps = PropsWithChildren<{
   title?: string;
   nomor: number;
+  textLatin?: string;
+  tempatTurun?: string;
+  jumlahAyat?: number;
 }>;
 
-interface Home {
-  nomor?: any;
-  nama?: string;
-  teksArab?: string;
-  nomorAyat?: number;
-  namaLatin?: string;
-  tempatTurun?: string;
-}
+type Home = PropsWithChildren<{
+  nomor: any;
+  nama: string;
+  teksArab: string;
+  nomorAyat: number;
+  namaLatin: string;
+  tempatTurun: string;
+  jumlahAyat: number;
+}>;
 
 type HomeProps = PropsWithChildren<{
   surah: Home;
   onPress?: any;
 }>;
 
-function Section({
-  title,
-  nomor,
-  textLatin,
-  tempatTurun,
-  jumlahAyat,
-}: SectionProps): JSX.Element {
+const Section: React.FC<SectionProps> = props => {
+  const {title, nomor, textLatin} = props;
+
   const isDarkMode = useColorScheme() === 'dark';
   const arabicNumber = nomor.toLocaleString('ar-EG');
   return (
     <View style={styles.sectionContainer}>
-      {renderLeftSection(
-        title,
-        nomor,
-        textLatin,
-        tempatTurun,
-        jumlahAyat,
-        isDarkMode,
-      )}
+      {renderLeftSection(props, isDarkMode)}
       <Text
         style={[
           styles.sectionTitle,
@@ -64,16 +57,14 @@ function Section({
       </Text>
     </View>
   );
-}
+};
 
-const renderLeftSection = (
-  title,
-  nomor,
-  textLatin,
-  tempatTurun,
-  jumlahAyat,
-  isDarkMode,
+const renderLeftSection: React.FC<SectionProps> = (
+  props,
+  isDarkMode: boolean,
 ) => {
+  const {nomor, textLatin, tempatTurun, jumlahAyat} = props;
+
   if (!textLatin) {
     return null;
   }
@@ -109,7 +100,7 @@ const renderLeftSection = (
   );
 };
 
-function Home({surah, onPress}: HomeProps): JSX.Element {
+const Home: React.FC<HomeProps> = ({surah, onPress}: HomeProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   let text;
   let nomor;
@@ -144,7 +135,7 @@ function Home({surah, onPress}: HomeProps): JSX.Element {
       </TouchableRipple>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -155,34 +146,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#928a97',
     paddingBottom: 10,
-    // justifyContent: 'space-between',
-    // alignItems: 'flex-start',
   },
   sectionTitle: {
     flex: 3,
     fontSize: 22,
     fontWeight: '600',
-    // fontFamily: 'Zokrofi'
     fontFamily: 'LPMQ',
     lineHeight: 60,
-    // fontFamily: 'pdms-saleem-quranfont',
-    // justifyContent: 'space-between',
-    // alignSelf: 'flex-start',
-    // backgroundColor: '#ccc',
   },
   nomorAyat: {
     flex: 1,
-    // marginTop: 8,
-    // fontSize: 16,
     fontWeight: '400',
     fontFamily: 'LPMQ',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: '#bbb',
   },
   textLatin: {
     flex: 1,
-    // marginTop: 8,
     fontSize: 16,
     fontWeight: '500',
     fontFamily: 'LPMQ',
