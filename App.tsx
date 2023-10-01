@@ -14,7 +14,12 @@ import CustomNavigationBar from './src/components/CustomNavigationBar';
 import NotificationHelper from './src/helpers/NotificationHelper';
 import messaging from '@react-native-firebase/messaging';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  SurahList: undefined;
+  Surah: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function Main(): JSX.Element {
   const notification = new NotificationHelper();
@@ -29,8 +34,7 @@ function Main(): JSX.Element {
     });
 
     return unsubscribe;
-  })
-
+  });
 
   const isDarkMode = useColorScheme() === 'dark';
 
