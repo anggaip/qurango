@@ -21,8 +21,11 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SurahList'>;
 
-type Item = {
-  item: object;
+type SurahItem = {
+  item: {
+    nomor: number;
+    namaLatin: string;
+  };
 };
 
 type SurahList = {
@@ -129,13 +132,13 @@ const renderContent: (
   );
 };
 
-const renderItem: React.FC<Item> = ({item}, navigation) => {
+const renderItem: React.FC<SurahItem> = ({item}, navigation) => {
   return (
-    <Home surah={item} onPress={() => handleOnpressList(item, navigation)} />
+    <Home surah={item} onPress={() => handleOnpressList({item}, navigation)} />
   );
 };
 
-const handleOnpressList = (item: any, {navigation}: Props): void => {
+const handleOnpressList = ({item}: SurahItem, {navigation}: Props): void => {
   NetworkFacade.get(`https://equran.id/api/v2/surat/${item.nomor}`).then(
     function (response) {
       if (response.data.code === 200) {
