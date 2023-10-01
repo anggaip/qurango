@@ -1,14 +1,29 @@
 import React from 'react';
-import {Appbar, Searchbar} from 'react-native-paper';
+import {Appbar} from 'react-native-paper';
 import {getHeaderTitle} from '@react-navigation/elements';
 import {StyleSheet} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-export default function CustomNavigationBar({
+type RootStackParamList = {
+  SurahList: undefined;
+  Surah: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList>;
+
+type NavigationBarProps = {
+  navigation: Props['navigation'];
+  route: Props['route'];
+  options: object;
+  back: boolean;
+};
+
+const CustomNavigationBar: React.FC<NavigationBarProps> = ({
   navigation,
   route,
   options,
   back,
-}) {
+}) => {
   // const [visible, setVisible] = React.useState(false);
   // const [searchBarVisible, setSearchBarVisible] = React.useState(false);
   // const [searchQuery, setSearchQuery] = React.useState('');
@@ -76,7 +91,9 @@ export default function CustomNavigationBar({
       {/*) : null}*/}
     </Appbar.Header>
   );
-}
+};
+
+export default CustomNavigationBar;
 
 const styles = StyleSheet.create({
   header: {
