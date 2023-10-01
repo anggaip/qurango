@@ -11,7 +11,7 @@ import {
 import {ActivityIndicator, MD2Colors, Searchbar} from 'react-native-paper';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Home from './Home';
-import NetworkFacade from '../network/NetworkFacade';
+import {getData} from '../network/NetworkFacade';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -30,20 +30,32 @@ type SurahItem = {
 
 type SurahList = {
   code: number;
-  data: object[];
+  data: SurahListData[];
   message: string;
 };
 
+type SurahListData = {
+  nama: string;
+  namaLatin: string;
+  nomor: number;
+  jumlahAyat: number;
+};
+
 const SurahListScreen: React.FC<Props> = navigation => {
-  const [surahList, setSurahList] = useState<SurahList[]>([]);
-  const [filterSurahList, setFilterSurahList] = useState([]);
+  const [surahList, setSurahList] = useState<SurahListData[]>([]);
+  const [filterSurahList, setFilterSurahList] = useState(surahList);
   const [searchQuery, setSearchQuery] = React.useState('');
 
   useEffect(() => {
     if (surahList.length === 0) {
-      NetworkFacade.get('https://equran.id/api/v2/surat').then(response => {
-        setSurahList(response.data);
-      });
+      const fetchSurah = async (): Promise<void> => {
+        const surah = await getData<SurahList[]>(
+          'https://equran.id/api/v2/surat',
+        );
+        setSurahList(surah.data);
+      };
+
+      fetchSurah();
     }
   }, [surahList.length]);
 
@@ -57,7 +69,7 @@ const SurahListScreen: React.FC<Props> = navigation => {
 
   const onChangeSearch = (value: string): void => {
     setSearchQuery(value);
-    const newData = surahList.data.filter((item: any) => {
+    const newData = surahList.filter(item => {
       const itemData = item.namaLatin.toLowerCase();
       const newItemData = itemData.replace(/-/g, ' ');
       return newItemData.indexOf(value.toLowerCase()) > -1;
@@ -86,16 +98,11 @@ const SurahListScreen: React.FC<Props> = navigation => {
 };
 
 const renderContent: (
-  surahList: SurahList[],
-  filterSurahList: string[],
+  surahList: SurahListData[],
+  filterSurahList: SurahListData[],
   searchQuery: string,
   navigation: Props,
-) => JSX.Element = (
-  surahList: any,
-  filterSurahList: string[],
-  searchQuery: string,
-  navigation,
-) => {
+) => JSX.Element = (surahList, filterSurahList, searchQuery, navigation) => {
   if (surahList.length === 0) {
     return (
       <ActivityIndicator
@@ -107,7 +114,7 @@ const renderContent: (
     );
   }
 
-  let newSurahList = surahList.data;
+  let newSurahList = surahList;
 
   if (filterSurahList.length !== 0) {
     newSurahList = filterSurahList;
@@ -126,7 +133,7 @@ const renderContent: (
       <FlatList
         data={newSurahList}
         renderItem={item => renderItem(item, navigation)}
-        keyExtractor={item => item.nomor}
+        keyExtractor={(item: SurahListData) => item.nomor.toString()}
       />
     </View>
   );
@@ -138,17 +145,18 @@ const renderItem: React.FC<SurahItem> = ({item}, navigation) => {
   );
 };
 
-const handleOnpressList = ({item}: SurahItem, {navigation}: Props): void => {
-  NetworkFacade.get(`https://equran.id/api/v2/surat/${item.nomor}`).then(
-    function (response) {
-      if (response.data.code === 200) {
-        navigation.navigate('Surah', {
-          surah: response.data.data,
-          title: item.namaLatin,
-        });
-      }
-    },
+const handleOnpressList = async (
+  {item}: SurahItem,
+  {navigation}: Props,
+): Promise<void> => {
+  const getSurahDetail = await getData<SurahList[]>(
+    `https://equran.id/api/v2/surat/${item.nomor}`,
   );
+
+  navigation.navigate('Surah', {
+    surah: getSurahDetail.data,
+    title: item.namaLatin,
+  });
 };
 
 const styles = StyleSheet.create({
