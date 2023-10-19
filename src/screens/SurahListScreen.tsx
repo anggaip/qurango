@@ -5,18 +5,24 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
-import {ActivityIndicator, MD2Colors, Searchbar} from 'react-native-paper';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {
+  ActivityIndicator,
+  MD2Colors,
+  Searchbar,
+  useTheme,
+} from 'react-native-paper';
 import Home from './Home';
 import {getData} from '../network/NetworkFacade';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   SurahList: undefined;
-  Surah: {surah: string; title: string};
+  Surah: {
+    surah: object[];
+    title: string;
+  };
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SurahList'>;
@@ -59,10 +65,10 @@ const SurahListScreen: React.FC<Props> = navigation => {
     }
   }, [surahList.length]);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#283c63' : Colors.lighter,
+    backgroundColor: theme.colors.background,
     flex: 1,
     paddingBottom: 70,
   };
@@ -79,17 +85,23 @@ const SurahListScreen: React.FC<Props> = navigation => {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle="light-content" backgroundColor="#080f58" />
-      <View style={styles.container}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={theme.colors.onPrimaryContainer}
+      />
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme.colors.onPrimaryContainer,
+          },
+        ]}>
         <Searchbar
           placeholder="Cari surat"
           onChangeText={onChangeSearch}
           value={searchQuery}
           clearIcon={'close-circle-outline'}
-          style={[
-            {backgroundColor: isDarkMode ? '#283c63' : Colors.lighter},
-            styles.searchBar,
-          ]}
+          style={[{backgroundColor: theme.colors.onPrimary}, styles.searchBar]}
         />
       </View>
       {renderContent(surahList, filterSurahList, searchQuery, navigation)}
@@ -164,7 +176,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: '#080f58',
     paddingHorizontal: 10,
   },
   searchBar: {

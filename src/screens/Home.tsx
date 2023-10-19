@@ -1,8 +1,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import {Text, useColorScheme, StyleSheet, View} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {TouchableRipple} from 'react-native-paper';
+import {Text, StyleSheet, View} from 'react-native';
+import {TouchableRipple, useTheme} from 'react-native-paper';
 
 type SectionProps = PropsWithChildren<{
   title?: string;
@@ -13,33 +12,44 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 type Home = PropsWithChildren<{
-  nomor: any;
-  nama: string;
-  teksArab: string;
-  nomorAyat: number;
-  namaLatin: string;
-  tempatTurun: string;
-  jumlahAyat: number;
+  nomor?: any;
+  nama?: string;
+  teksArab?: string;
+  nomorAyat?: number;
+  namaLatin?: string;
+  tempatTurun?: string;
+  jumlahAyat?: number;
 }>;
 
 type HomeProps = PropsWithChildren<{
   surah: Home;
+  nomorSurah: number;
   onPress?: any;
 }>;
 
+type NomorAyat = {
+  nomor: number;
+};
+
+type BismillahProps = {
+  nomor: number;
+  nomorSurah: number;
+};
+
 const Section: React.FC<SectionProps> = props => {
   const {title, nomor, textLatin} = props;
+  const theme = useTheme();
 
-  const isDarkMode = useColorScheme() === 'dark';
   const arabicNumber = nomor.toLocaleString('ar-EG');
   return (
     <View style={styles.sectionContainer}>
-      {renderLeftSection(props, isDarkMode)}
+      {renderLeftSection(props, theme)}
       <Text
         style={[
           styles.sectionTitle,
           {
-            color: isDarkMode ? '#eeeeee' : Colors.black,
+            color: theme.colors.onTertiaryContainer,
+            // backgroundColor: 'grey'
           },
         ]}>
         {title}
@@ -61,7 +71,7 @@ const Section: React.FC<SectionProps> = props => {
 
 const renderLeftSection: React.FC<SectionProps> = (
   props,
-  isDarkMode: boolean,
+  theme: object,
 ) => {
   const {nomor, textLatin, tempatTurun, jumlahAyat} = props;
 
@@ -71,28 +81,27 @@ const renderLeftSection: React.FC<SectionProps> = (
 
   return (
     <>
-      <Text
-        style={[
-          styles.nomorAyat,
-          {
-            color: isDarkMode ? '#eeeeee' : Colors.black,
-            fontSize: 16,
-          },
-        ]}>
-        ({nomor})
-      </Text>
+      <NomorAyat nomor={nomor} />
       <View style={{flex: 3, flexDirection: 'column'}}>
         <Text
           style={[
             styles.textLatin,
             styles.highlight,
             {
-              color: isDarkMode ? '#eeeeee' : Colors.black,
+              color: theme.colors.onTertiaryContainer,
+              // backgroundColor: 'green',
+              textAlignVertical: 'bottom',
             },
           ]}>
           {textLatin}
         </Text>
-        <Text style={{flex: 1, color: isDarkMode ? '#eeeeee' : Colors.black}}>
+        <Text
+          style={{
+            flex: 1,
+            color: theme.colors.onTertiaryContainer,
+            fontSize: 12,
+            // backgroundColor: 'black',
+          }}>
           {tempatTurun} | {jumlahAyat} ayat
         </Text>
       </View>
@@ -100,8 +109,73 @@ const renderLeftSection: React.FC<SectionProps> = (
   );
 };
 
-const Home: React.FC<HomeProps> = ({surah, onPress}: HomeProps) => {
-  const isDarkMode = useColorScheme() === 'dark';
+const NomorAyat: React.FC<NomorAyat> = ({nomor}) => {
+  const theme = useTheme();
+
+  return (
+    <View
+      style={[
+        styles.nomorAyatWrapper,
+        {
+          backgroundColor: theme.colors.primary,
+          justifyContent: 'center',
+          alignSelf: 'center',
+          alignContent: 'center',
+          marginRight: 15,
+          height: 45,
+          borderRadius: 50,
+          overflow: 'hidden',
+        },
+      ]}>
+      <Text
+        style={[
+          styles.nomorAyat,
+          {
+            color: theme.colors.onPrimary,
+            fontSize: 18,
+            textAlign: 'center',
+            includeFontPadding: false,
+          },
+        ]}>
+        {nomor}
+      </Text>
+    </View>
+  );
+};
+
+const Bismillah: React.FC<BismillahProps> = ({nomor, nomorSurah}) => {
+  const theme = useTheme();
+  const isNotFirstAyah = nomor !== 1;
+  const isAlfatihah = nomorSurah === 1;
+  const isAttaubah = nomorSurah === 9;
+
+  if (isAlfatihah || isAttaubah || isNotFirstAyah) {
+    return null;
+  }
+
+  return (
+    <View
+      style={{
+        backgroundColor: theme.colors.tertiaryContainer,
+        paddingVertical: 10,
+        marginBottom: 5,
+      }}>
+      <Text
+        style={{
+          fontFamily: 'LPMQ',
+          textAlign: 'center',
+          fontSize: 18,
+          color: theme.colors.onTertiaryContainer,
+        }}>
+        ﷽
+      </Text>
+    </View>
+  );
+};
+
+const Home: React.FC<HomeProps> = ({surah, onPress, nomorSurah}) => {
+  const theme = useTheme();
+
   let text;
   let nomor;
   let textLatin;
@@ -118,22 +192,27 @@ const Home: React.FC<HomeProps> = ({surah, onPress}: HomeProps) => {
     jumlahAyat = surah.jumlahAyat;
   }
   return (
-    <View
-      key={nomor}
-      style={{
-        backgroundColor: isDarkMode ? '#283c63' : Colors.white,
-        paddingHorizontal: 15,
-      }}>
-      <TouchableRipple onPress={onPress}>
-        <Section
-          title={text}
-          nomor={nomor}
-          textLatin={textLatin}
-          tempatTurun={tempatTurun}
-          jumlahAyat={jumlahAyat}
-        />
-      </TouchableRipple>
-    </View>
+    <>
+      <Bismillah nomorSurah={nomorSurah} nomor={nomor} />
+      <View
+        key={nomor}
+        style={{
+          backgroundColor: theme.colors.tertiaryContainer,
+          marginVertical: 7,
+          marginHorizontal: 15,
+          borderRadius: 13,
+        }}>
+        <TouchableRipple onPress={onPress}>
+          <Section
+            title={text}
+            nomor={nomor}
+            textLatin={textLatin}
+            tempatTurun={tempatTurun}
+            jumlahAyat={jumlahAyat}
+          />
+        </TouchableRipple>
+      </View>
+    </>
   );
 };
 
@@ -141,21 +220,23 @@ const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 15,
+    // marginTop: 15,
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#928a97',
-    paddingBottom: 10,
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#cdccce',
+    // paddingBottom: 10,
   },
   sectionTitle: {
     flex: 3,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '600',
     fontFamily: 'LPMQ',
     lineHeight: 60,
   },
-  nomorAyat: {
+  nomorAyatWrapper: {
     flex: 1,
+  },
+  nomorAyat: {
     fontWeight: '400',
     fontFamily: 'LPMQ',
   },

@@ -1,7 +1,6 @@
 import React from 'react';
-import {Appbar} from 'react-native-paper';
+import {Appbar, useTheme} from 'react-native-paper';
 import {getHeaderTitle} from '@react-navigation/elements';
-import {StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -44,14 +43,19 @@ const CustomNavigationBar: React.FC<NavigationBarProps> = ({
 
   const title = getHeaderTitle(options, route.name);
 
+  const theme = useTheme();
+
   return (
     <Appbar.Header
-      style={styles.header}
+      style={{backgroundColor: theme.colors.onPrimaryContainer}}
       mode={back ? 'small' : 'center-aligned'}>
       {back ? (
         <Appbar.BackAction iconColor="#DAE1E7" onPress={navigation.goBack} />
       ) : null}
-      <Appbar.Content title={title} titleStyle={styles.content} />
+      <Appbar.Content
+        title={title}
+        titleStyle={{color: theme.colors.onPrimary}}
+      />
       {/*{!back ? (*/}
       {/*  !searchBarVisible ? (*/}
       {/*    <>*/}
@@ -94,16 +98,3 @@ const CustomNavigationBar: React.FC<NavigationBarProps> = ({
 };
 
 export default CustomNavigationBar;
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#080f58',
-  },
-  content: {
-    fontSize: 18,
-    color: '#DAE1E7',
-  },
-  searchbar: {
-    color: '#DAE1E7',
-  },
-});

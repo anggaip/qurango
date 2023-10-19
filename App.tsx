@@ -6,22 +6,28 @@ import React, {useEffect} from 'react';
 import {Alert, useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {PaperProvider} from 'react-native-paper';
+import {PaperProvider, MD3LightTheme, MD3DarkTheme} from 'react-native-paper';
+import messaging from '@react-native-firebase/messaging';
 
 import SurahScreen from './src/screens/SurahScreen';
 import SurahListScreen from './src/screens/SurahListScreen';
 import CustomNavigationBar from './src/components/CustomNavigationBar';
 import NotificationHelper from './src/helpers/NotificationHelper';
-import messaging from '@react-native-firebase/messaging';
+import lightTheme from './src/assets/themes/light.json';
+import darkTheme from './src/assets/themes/dark.json';
 
-type RootStackParamList = {
+type SurahProps = {
+  ayat: object;
+};
+
+export type RootStackParamList = {
   SurahList: undefined;
-  Surah: undefined;
+  Surah: {surah: SurahProps[]; title: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function Main(): JSX.Element {
+const Main: React.FC = () => {
   const notification = new NotificationHelper();
   notification.getDeviceToken().then(function (response) {
     console.log(response);
@@ -36,18 +42,32 @@ function Main(): JSX.Element {
     return unsubscribe;
   });
 
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = isDarkMode ? '#283c63' : 'white';
+  let customTheme = {
+    ...MD3LightTheme,
+    colors: lightTheme.colors,
+  };
+
+  // if (isDarkMode) {
+  //   customTheme = {
+  //     ...MD3DarkTheme,
+  //     colors: darkTheme.colors,
+  //   };
+  // } else {
+  //   customTheme = {
+  //     ...MD3LightTheme,
+  //     colors: lightTheme.colors,
+  //   };
+  // }
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={customTheme}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="SurahList"
           screenOptions={{
             header: props => <CustomNavigationBar {...props} />,
-            contentStyle: {backgroundColor: backgroundStyle},
           }}>
           <Stack.Screen
             name="SurahList"
@@ -63,14 +83,14 @@ function Main(): JSX.Element {
       </NavigationContainer>
     </PaperProvider>
   );
-}
+};
 
-function App(): JSX.Element {
+const App: React.FC = () => {
   return (
     <PaperProvider>
       <Main />
     </PaperProvider>
   );
-}
+};
 
 export default App;
